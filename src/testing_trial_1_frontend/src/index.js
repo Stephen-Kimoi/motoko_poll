@@ -2,7 +2,8 @@ const pollForm = document.getElementById("radioForm");
 const resultsDiv = document.getElementById('results');
 const resetButton = document.getElementById('reset');
 
-import { poll_backend } from "../../declarations/testing_trial_1_backend";
+import { testing_trial_1_backend } from "../../declarations/testing_trial_1_backend";
+
 
 // Local Data 
 const pollResults = {
@@ -13,15 +14,19 @@ const pollResults = {
 };
 
 document.addEventListener('DOMContentLoaded', async (e) => {
- e.preventDefault();
+  e.preventDefault();
 
- const question = await poll_backend.getQuestion();
- document.getElementById("question").innerText = question;
+  console.log("Fetching question from Motoko backend...."); 
+  console.log("Poll backend is: ", testing_trial_1_backend); 
+  const question = await testing_trial_1_backend.getQuestion();
+  console.log("Question is: ", question); 
 
- const voteCounts = await poll_backend.getVotes();
- updateLocalVoteCounts(voteCounts);
- displayResults();
- return false;
+  document.getElementById("question").innerText = question;
+
+  const voteCounts = await testing_trial_1_backend.getVotes();
+  updateLocalVoteCounts(voteCounts);
+  displayResults();
+  return false;
 }, false);
 
 pollForm.addEventListener('submit', async (e) => { 
@@ -30,7 +35,7 @@ pollForm.addEventListener('submit', async (e) => {
   const formData = new FormData(pollForm);
   const checkedValue = formData.get("option");
 
-  const updatedVoteCounts = await poll_backend.vote(checkedValue);
+  const updatedVoteCounts = await testing_trial_1_backend.vote(checkedValue);
   console.log("Returning from await...")
   console.log(updatedVoteCounts);
   updateLocalVoteCounts(updatedVoteCounts);
@@ -41,8 +46,8 @@ pollForm.addEventListener('submit', async (e) => {
 resetButton.addEventListener('click', async (e) => { 
   e.preventDefault();
     
-  await poll_backend.resetVotes();
-  const voteCounts = await poll_backend.getVotes();
+  await testing_trial_1_backend.resetVotes();
+  const voteCounts = await testing_trial_1_backend.getVotes();
   updateLocalVoteCounts(voteCounts);
 
   displayResults();
